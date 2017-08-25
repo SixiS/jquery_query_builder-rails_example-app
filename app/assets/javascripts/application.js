@@ -14,7 +14,11 @@
 //= require rails-ujs
 //= require turbolinks
 //= require bootstrap-sprockets
+
 //= require jquery.extendext
 //= require doT
 //= require query-builder
+//= require i18n/query-builder.en.js
+//= require i18n/query-builder.es.js
+
 //= require_tree .

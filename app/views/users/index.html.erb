@@ -1,8 +1,46 @@
-<h1>Users#index</h1>
-<ul>
-  <% @users.each do |user| %>
-    <li>
-      <%= user[:firstname] %> <%= user[:surname] %>, <%= user[:age] %>
-    </li>
+<div id='user-index'>
+  <h1>Users</h1>
+  <ul>
+    <% @users.each do |user| %>
+      <li>
+        <%= user['firstname'] %> <%= user['surname'] %>, <%= user['age'] %>
+      </li>
+    <% end %>
+  </ul>
+
+  <hr>
+
+  <%= form_tag users_path, id: 'users_search', method: :get do %>
+    <div id="builder"></div>
+    <%= hidden_field_tag :query_builder_json %>
+    <br>
+    <%= submit_tag "Search users" %>
   <% end %>
-</ul>
+
+  <script>
+    // Initialize the query builder
+    $('#builder').queryBuilder({
+      filters: [
+        {id: 'firstname', type: 'string'},
+        {id: 'surname', type: 'string'},
+        {id: 'age', type: 'integer'}
+      ],
+      lang_code: 'en' // You can change this to es
+    });
+
+    // If there is query json (a search has happened), set the query builder to the last search.
+    <% if @query_json %>
+      $('#builder').queryBuilder('setRules', JSON.parse('<%=raw @query_json %>'));
+    <% end %>
+
+    // On form submit - set the rule json into the hidden field.
+    $('#users_search').on('submit', function(){
+      var query = $('#builder').queryBuilder('getRules');
+      if(query){
+        $('#query_builder_json').val(JSON.stringify(query));
+      }else{
+        $('#query_builder_json').val(null);
+      }
+    })
+  </script>
+</div>
